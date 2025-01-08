@@ -1,0 +1,30 @@
+name: Generate GitHub Activity
+
+on:
+  schedule:
+    - cron: '15 17 * * *'  # 10:45 PM IST
+  workflow_dispatch:  # Allows manual trigger
+
+jobs:
+  generate_activity:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Generate random number of commits
+      run: |
+        RANDOM_COMMITS=$(( ( RANDOM % 4 ) + 1 ))
+        echo "Generating $RANDOM_COMMITS commits"
+        git config user.name "Pankaj1662005"
+        git config user.email "pankajsheokand2005@gmail.com"
+
+        for ((i=1; i<=RANDOM_COMMITS; i++))
+        do
+          echo "Commit #$i on $(date)" >> activity_log.txt
+          git add .
+          git commit -m "Generated commit #$i on $(date)"
+        done
+
+        git push
